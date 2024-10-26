@@ -8,26 +8,27 @@ end
 
 function M.open()
 	if vim.fn.executable("mpv") == 0 then
-		vim.notify("mpv is not installed!", vim.log.levels.ERROR, { title = "Subway Surfers" })
+		vim.notify("mpv is not installed", vim.log.levels.ERROR, { title = "Subway Surfers" })
 		return
 	end
 
 	local old_win = vim.api.nvim_get_current_win()
-	vim.cmd("vertical botright split")
-	local win = vim.api.nvim_get_current_win()
-
-	local width = math.floor(vim.o.columns * 0.25)
-	vim.cmd(string.format("vertical resize %i", width))
 
 	local buf = vim.api.nvim_create_buf(false, true)
+	local win = vim.api.nvim_open_win(buf, true, {
+		win = -1,
+		width = math.floor(vim.o.columns * 0.25),
+		vertical = true,
+		split = "right",
+		style = "minimal",
+	})
 
-	vim.api.nvim_set_current_buf(buf)
+	if win == 0 then
+		vim.notify("Failed to open window", vim.log.levels.ERROR, { title = "Subway Surfers" })
+		return
+	end
+
 	vim.bo[buf].modifiable = false
-	vim.wo[win].number = false
-	vim.wo[win].relativenumber = false
-	vim.wo[win].signcolumn = "no"
-
-	vim.api.nvim_win_set_buf(win, buf)
 
 	local mpv_cmd = {
 		"mpv",
@@ -39,6 +40,7 @@ function M.open()
 	local shell = vim.fn.has("win32") == 0 and "sh" or "powershell"
 	local cmd = { shell, "-c", vim.iter(mpv_cmd):join(" ") }
 
+	vim.api.nvim_set_current_buf(buf)
 	vim.fn.termopen(cmd, {
 		stderr_buffered = true,
 		on_stderr = function(_, data, _)
