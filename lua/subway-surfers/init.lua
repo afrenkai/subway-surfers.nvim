@@ -34,6 +34,7 @@ function M.open()
 		"mpv",
 		"--really-quiet",
 		"--vo=tct",
+		"--vf-add=fps:10:round=near",
 		"~/Downloads/subway-surfers.mp4",
 	}
 
