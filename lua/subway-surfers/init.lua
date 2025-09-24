@@ -19,7 +19,7 @@ function H.extract_video_id(youtube_url)
 	return id
 end
 
-local video_url = "https://www.youtube.com/watch?v=RbVMiu4ubT0"
+local video_url = "https://www.youtube.com/watch?v=-uAZdIJIl8o"
 local video_id = H.extract_video_id(video_url) --[[@as string]]
 local data_path = string.format("%s/subway-surfers.nvim", vim.fn.stdpath("data"))
 
